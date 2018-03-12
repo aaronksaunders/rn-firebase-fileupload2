@@ -20,10 +20,10 @@ export const authCheck = async () => {
     firebase.auth().onAuthStateChanged(user => {
       if (user != null) {
         console.log("We are authenticated now!");
-        resolve(true);
+        return resolve(user);
       } else {
         console.log("We did not authenticate.");
-        resolve(false);
+        return resolve(null);
       }
     });
   });
@@ -31,4 +31,8 @@ export const authCheck = async () => {
 
 export const loginWithEmail = (email, password) => {
   return firebase.auth().signInWithEmailAndPassword(email, password);
+};
+
+export const logOut = () => {
+  return firebase.auth().signOut();
 };

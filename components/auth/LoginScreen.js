@@ -7,7 +7,8 @@ import {
   StyleSheet,
   Button,
   TextInput,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Platform
 } from "react-native";
 
 import * as firebaseAPI from "../../firebase";
@@ -30,7 +31,7 @@ export default class LogInScreen extends React.Component {
             paddingLeft: 5,
             width: "80%",
             borderColor: "gray",
-            borderWidth: 1
+            borderWidth: Platform.OS == "ios" ? 1 : 0
           }}
           keyboardType="email-address"
           placeholder="email address"
@@ -49,7 +50,7 @@ export default class LogInScreen extends React.Component {
             height: 40,
             width: "80%",
             borderColor: "gray",
-            borderWidth: 1
+            borderWidth: Platform.OS == "ios" ? 1 : 0
           }}
           secureTextEntry={true}
           autoCapitalize="none"
@@ -60,9 +61,13 @@ export default class LogInScreen extends React.Component {
           }
           value={this.state.text}
         />
-        <View style={{ marginTop: 10 }}>
-          <Button title="Sign in!" onPress={this._signInAsync} />
-          <Button title="Create Account" onPress={this._signUp} />
+        <View>
+          <View style={{ marginTop: 20 }}>
+            <Button title="Sign in!" onPress={this._signInAsync} />
+          </View>
+          <View style={{ marginTop: 10 }}>
+            <Button title="Create Account" onPress={this._signUp} />
+          </View>
         </View>
       </KeyboardAvoidingView>
     );

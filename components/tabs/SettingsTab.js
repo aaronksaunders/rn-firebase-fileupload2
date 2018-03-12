@@ -1,6 +1,7 @@
 import React from "react";
 import { Text, View, StatusBar, Button, AsyncStorage } from "react-native";
 import { TabNavigator, StackNavigator } from "react-navigation";
+import * as firebaseAPI from "../../firebase";
 
 class SettingsScreen extends React.Component {
   static navigationOptions = {
@@ -8,6 +9,7 @@ class SettingsScreen extends React.Component {
   };
   _signOutAsync = async () => {
     await AsyncStorage.clear();
+    await firebaseAPI.logOut();
     this.props.navigation.navigate("Auth");
   };
 
