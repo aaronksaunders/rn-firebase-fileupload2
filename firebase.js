@@ -14,6 +14,9 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
+/**
+ *
+ */
 export const authCheck = async () => {
   return new Promise(resolve => {
     // Listen for authentication state to change.
@@ -29,10 +32,60 @@ export const authCheck = async () => {
   });
 };
 
+/**
+ *
+ * @param {*} email
+ * @param {*} password
+ */
 export const loginWithEmail = (email, password) => {
   return firebase.auth().signInWithEmailAndPassword(email, password);
 };
 
+/**
+ *
+ */
 export const logOut = () => {
   return firebase.auth().signOut();
+};
+
+/**
+ *
+ * @param {*} userInfo.lastName
+ * @param {*} userInfo.firstName
+ * @param {*} userInfo.email
+ * @param {*} userInfo.password
+ */
+export const registerUser = userInfo => {
+  console.log("in registerUser");
+  return firebase
+    .auth()
+    .createUserWithEmailAndPassword(userInfo.email, userInfo.password)
+    .then(newUser => {
+      let { email, firstName, lastName } = userInfo;
+
+      return firebase
+        .database()
+        .ref("/users")
+        .child(newUser.uid)
+        .set({ email, firstName, lastName });
+    });
+};
+
+/**
+ *
+ */
+export const getUserProfile = () => {
+  let user = firebase.auth().currentUser;
+  console.log(user);
+  return firebase
+    .database()
+    .ref("/users")
+    .child(user.uid)
+    .once("value")
+    .then(function(snapshot) {
+      return {
+        uid: user.uid,
+        ...snapshot.val()
+      };
+    });
 };

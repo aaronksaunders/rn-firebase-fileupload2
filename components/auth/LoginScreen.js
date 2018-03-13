@@ -81,16 +81,22 @@ export default class LogInScreen extends React.Component {
       return;
     }
 
-    firebaseAPI.loginWithEmail(email, password).then(
-      user => {
+    firebaseAPI
+      .loginWithEmail(email, password)
+      .then(user => {
         console.log(user);
-        this.props.navigation.navigate("App");
-      },
-      error => {
-        alert(error);
-        console.log(error);
-      }
-    );
+        return firebaseAPI.getUserProfile();
+      })
+      .then(
+        userInfo => {
+          console.log(userInfo);
+          this.props.navigation.navigate("App");
+        },
+        error => {
+          alert(error);
+          console.log(error);
+        }
+      );
   };
 
   //    this.props.navigation.navigate('Other');
