@@ -1,4 +1,5 @@
 import * as firebase from "firebase"; // 4.3.0
+require("firebase/firestore");
 
 var firebaseConfig = {
   apiKey: "AIzaSyBjtl81OTTPAZWp92KFB01qsou39vEC2VA",
@@ -41,6 +42,9 @@ export const loginWithEmail = (email, password) => {
   return firebase.auth().signInWithEmailAndPassword(email, password);
 };
 
+export const getCurrentUser = () => {
+  return firebase.auth().currentUser;
+};
 /**
  *
  */
@@ -64,9 +68,9 @@ export const registerUser = userInfo => {
       let { email, firstName, lastName } = userInfo;
 
       return firebase
-        .database()
-        .ref("/users")
-        .child(newUser.uid)
+        .firestore()
+        .collection("users")
+        .doc(newUser.uid)
         .set({ email, firstName, lastName });
     });
 };
@@ -77,15 +81,28 @@ export const registerUser = userInfo => {
 export const getUserProfile = () => {
   let user = firebase.auth().currentUser;
   console.log(user);
-  return firebase
-    .database()
-    .ref("/users")
-    .child(user.uid)
-    .once("value")
-    .then(function(snapshot) {
-      return {
-        uid: user.uid,
-        ...snapshot.val()
-      };
+
+  var userRef = firebase
+    .firestore()
+    .collection("users")
+    .doc(user.uid);
+
+  return userRef
+    .get()
+    .then(doc => {
+      if (doc.exists) {
+        console.log("Document data:", doc.data());
+        return {
+          ...doc.data(),
+          id: user.uid
+        };
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!", user.uid);
+        return null;
+      }
+    })
+    .catch(error => {
+      console.log("Error getting document:", error);
     });
 };
