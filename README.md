@@ -3,6 +3,8 @@ Finally doing a firebase file upload with latest release of react-native... and 
 
 Latest release of react-native supports blobs which FINALLY we can do file uploads out of the box to firebase, no plugins, modules or cloud code required
 
+[Release Notes Feb 2018 - React Native](https://github.com/facebook/react-native/releases/tag/v0.54.0)
+
 ## Three Steps
 
 ### Get Image
@@ -16,6 +18,8 @@ I used the `react-native-image-picker` plugin to get a local file'uri
     });
   }
 ```
+[https://github.com/react-community/react-native-image-picker](https://github.com/react-community/react-native-image-picker)
+
 
 ### Convert Image To Blob
 I used the `fetch` API to retrieve the image and convert it to a blob
@@ -23,6 +27,8 @@ I used the `fetch` API to retrieve the image and convert it to a blob
     const response = await fetch(image.uri);
     const blob = await response.blob();
 ```
+[Using Fetch In React Native](https://facebook.github.io/react-native/docs/network.html)
+
 
 ### Basic Firebase File Upload
 Once you have a blob, firebase will happily upload it to firebase storage
@@ -48,6 +54,7 @@ Once you have a blob, firebase will happily upload it to firebase storage
       }
     );
  ```
+ [File Upload in Firebase](https://firebase.google.com/docs/storage/web/upload-files)
 
 ## Source Code
 
