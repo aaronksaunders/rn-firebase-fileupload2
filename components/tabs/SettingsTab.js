@@ -28,8 +28,8 @@ class SettingsScreen extends React.Component {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>Settings!</Text>
-        <Text>{this.state.userInfo.id}</Text>
-        <Text>{this.state.userInfo.email}</Text>
+        {/* <Text>{this.state.userInfo.id}</Text> */}
+        {/* <Text>{this.state.userInfo.email}</Text> */}
         <Button title="I'm done, sign me out" onPress={this._signOutAsync} />
         <Button title="Pay Invoice" onPress={this._showStripe} />
         <StatusBar barStyle="default" />

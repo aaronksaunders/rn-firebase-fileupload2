@@ -106,3 +106,92 @@ export const getUserProfile = () => {
       console.log("Error getting document:", error);
     });
 };
+
+/**
+ *
+ * @param {*} param0
+ */
+export const queryObjectCollection = ({ collection }) => {
+  let currentUserId = firebase.auth().currentUser.uid;
+  let collectionRef = firebase.firestore().collection(collection);
+
+  let results = [];
+
+  return collectionRef
+    .where("owner", "==", currentUserId)
+    .get()
+    .then(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        // doc.data() is never undefined for query doc snapshots
+        console.log(doc.id, " => ", doc.data());
+        results.push({ id: doc.id, ...doc.data() });
+      });
+      return results;
+    })
+    .catch(error => {
+      console.log("Error getting documents: ", error);
+      return error;
+    });
+};
+
+/**
+ *
+ * @param {*} _collection - name of collection to add object to
+ * @param {*} _objectData - data to add to the collection
+ */
+export const addObjectToCollection = ({ collection, objectData }) => {
+  let currentUserId = firebase.auth().currentUser.uid;
+  let collectionRef = firebase.firestore().collection(collection);
+
+  return collectionRef
+    .add({
+      owner: currentUserId,
+      content: { ...objectData },
+      created: new Date().getTime(),
+      updated: new Date().getTime()
+    })
+    .then(
+      doc => {
+        console.log(`addObjectToCollection ${collection} ${doc}`);
+        return doc;
+      },
+      error => {
+        console.log(`ERROR: addObjectToCollection ${collection} ${error}`);
+        return error;
+      }
+    );
+};
+
+/**
+ *
+ * @param {*} blob
+ */
+export const uploadImage = blob => {
+  return new Promise((resolve, reject) => {
+    let currentUserId = firebase.auth().currentUser.uid;
+    const ref = firebase
+      .storage()
+      .ref(currentUserId)
+      .child(new Date().getTime() + "-" + currentUserId + ".jpeg");
+
+    const task = ref.put(blob);
+
+    task.on(
+      firebase.storage.TaskEvent.STATE_CHANGED,
+      snapshot =>
+        console.log(snapshot.bytesTransferred / snapshot.totalBytes * 100),
+      error => {
+        console.log("error", error);
+        return reject(error);
+      },
+      result => {
+        return resolve({
+          url: task.snapshot.downloadURL,
+          contentType: task.snapshot.metadata.contentType,
+          name: task.snapshot.metadata.name,
+          size: task.snapshot.metadata.size
+        });
+      }
+    );
+  });
+};
