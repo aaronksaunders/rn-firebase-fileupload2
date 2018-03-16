@@ -3,6 +3,8 @@ import { Text, View, StatusBar, Button, AsyncStorage } from "react-native";
 import { TabNavigator, StackNavigator } from "react-navigation";
 import * as firebaseAPI from "../../firebase";
 
+import SettingsDisplayComponent from "../SettingDisplayComponent";
+
 class SettingsScreen extends React.Component {
   static navigationOptions = {
     title: "Settings"
@@ -28,10 +30,10 @@ class SettingsScreen extends React.Component {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>Settings!</Text>
-        {/* <Text>{this.state.userInfo.id}</Text> */}
-        {/* <Text>{this.state.userInfo.email}</Text> */}
-        <Button title="I'm done, sign me out" onPress={this._signOutAsync} />
-        <Button title="Pay Invoice" onPress={this._showStripe} />
+        <SettingsDisplayComponent
+          doSignOut={this._signOutAsync}
+          user={userInfo}
+        />
         <StatusBar barStyle="default" />
       </View>
     );
